@@ -1,0 +1,44 @@
+@font-face {
+	font-family:'droid sans';
+	src:url('/assets/droid-sans.eot?') format('eot'),
+		url('/assets/droid-sans.woff') format('woff'),
+		url('/assets/droid-sans.ttf') format('truetype');
+	font-weight:normal;
+	font-style:normal;
+}
+@font-face {
+	font-family:'droid sans';
+	src:url('/assets/droid-sans-bold.eot?') format('eot'),
+		url('/assets/droid-sans-bold.woff') format('woff'),
+		url('/assets/droid-sans-bold.ttf') format('truetype');
+	font-weight:bold;
+	font-style:normal;
+}
+
+body {
+	margin:0;
+	padding:1em;
+	font-family:'droid sans',sans-serif;
+	text-align:justify;
+}
+header {
+	margin:-1em -1em 1.6em;
+	padding:1.6em 0;
+	color:#fff;
+	background:#69af98;
+	text-align:center;
+}
+section {
+	margin:0 auto 1em;
+	width:36%;
+}
+h1 {
+	margin:0;
+	letter-spacing:-1px;
+}
+
+@media(max-width:700px) {
+	section {
+		width:100%;
+	}
+}
