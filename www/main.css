@@ -28,7 +28,7 @@ header {
 	background:#69af98;
 	text-align:center;
 }
-section {
+div {
 	margin:0 auto 1em;
 	width:36%;
 }
@@ -37,7 +37,7 @@ h1 {
 	letter-spacing:-1px;
 }
 
-@media(max-width:700px) {
+@media (max-width:700px) {
 	section {
 		width:100%;
 	}
