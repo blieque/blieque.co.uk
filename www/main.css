@@ -17,12 +17,11 @@
 
 body {
 	margin:0;
-	padding:1em;
 	font-family:'droid sans',sans-serif;
 	text-align:justify;
 }
 header {
-	margin:-1em -1em 1.6em;
+	margin:0 0 1.6em;
 	padding:1.6em 0;
 	color:#fff;
 	background:#69af98;
@@ -30,15 +29,19 @@ header {
 }
 div {
 	margin:0 auto 1em;
+	padding:0 1em 1em;
+	box-sizing:border-box;
 	width:36%;
+	min-width:8cm;
 }
 h1 {
 	margin:0;
 	letter-spacing:-1px;
 }
 
-@media (max-width:700px) {
-	section {
+@media (max-width:calc(9cm)) {
+	div {
 		width:100%;
+		min-width:0;
 	}
 }
