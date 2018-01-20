@@ -35,7 +35,7 @@ const tiles = [
      * size of the big number arrays above.
      */
     for (let y = 5; y >= 0; y--) {
-        const row = tile[y].slice(1).reverse();
+        const row = tile[y].slice(0).reverse();
         tile.push(row);
     }
 
