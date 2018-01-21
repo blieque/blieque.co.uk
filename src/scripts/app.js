@@ -230,8 +230,8 @@ const draw = function draw(distribution, scheme) {
  * generator function to refresh the pattern.
  */
 const resize = function resize() {
-    el.canvas.width = window.innerWidth;
-    el.canvas.height = window.innerHeight;
+    el.canvas.width = el.canvasFrame.clientWidth;
+    el.canvas.height = el.canvasFrame.clientHeight;
     updatePattern();
 };
 
@@ -252,13 +252,16 @@ const updatePattern = (() => {
             }
         }
         draw(distribution, scheme);
+        el.nameHeading.style.setProperty('--shadow-color', scheme[0]);
     };
 })();
 
 // BOOTSTRAPPY STUFF
 
 const el = {};
+el.canvasFrame = document.querySelector('.layout__canvas-frame');
 el.canvas = document.querySelector('canvas');
+el.nameHeading = document.querySelector('.content__name');
 
 const ctx = el.canvas.getContext('2d');
 const pixelRatio = Math.round(window.devicePixelRatio + 0.5);

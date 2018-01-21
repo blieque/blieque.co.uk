@@ -1,0 +1,49 @@
+.content {
+    display: flex;
+
+    &__col:last-child {
+        flex: 1;
+    }
+
+    &__name {
+        margin: -0.9em 0 0 -1.15rem;
+        font-size: 28pt;
+        font-family: 'cmu serif', serif;
+        font-weight: bold;
+        font-style: italic;
+        --shadow-color: transparent;
+
+        @supports (--css: 0) {
+            text-shadow:
+                0.5px 0.5px 0 #fff,
+                1px 1px 0 #fff,
+                1.5px 1.5px 0 #fff,
+                2px 2px 0 var(--shadow-color),
+                2.5px 2.5px 0 var(--shadow-color),
+                3px 3px 0 var(--shadow-color);
+        }
+
+        &-wrapper {
+            display: inline-block;
+            padding: 0.5rem 1.3rem 0 1rem;
+            background: #fff;
+        }
+    }
+
+    &__profession {
+        margin: 0.5rem 0 0;
+        text-transform: uppercase;
+        font-size: 80%;
+    }
+
+    &__description {
+        margin: 1.7rem 0 0;
+        font-family: 'cmu serif', serif;
+        font-style: italic;
+        font-size: 13pt;
+
+        a {
+            font-size: 90%;
+        }
+    }
+}

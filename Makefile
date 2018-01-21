@@ -13,8 +13,7 @@ source = ./src
 static = ./src/static
 
 markup_list_out = $(shell find $(source) -maxdepth 1 -name "*.html" -printf '$(output)/%f ')
-image_list = $(shell find $(static)/images -type f -printf '%p ')
-font_list = $(shell find $(static)/fonts -type f -printf '%p ')
+static_list = $(shell find $(static) -type f -printf '%p ')
 
 clean:
 	@echo "Cleaning output directory"
@@ -58,7 +57,7 @@ $(output)/app.min.js: $(source)/scripts/app.js
 # This makes it hard for `make' to know if the dependencies have updated.
 # Luckily we can leave the cleverness to `cp' instead.
 static: $(output)/static
-$(output)/static: $(image_list)
+$(output)/static: $(static_list)
 	@echo "Copying static assets"
 	@[[ -d $(output)/static ]] || mkdir $(output)/static
 	@rsync \

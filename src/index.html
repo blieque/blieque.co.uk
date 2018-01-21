@@ -15,14 +15,23 @@
     </head>
 
     <body>
-        <canvas></canvas>
-        <main>
-        <header>
-            <h1>blieque.co.uk</h1>
-        </header>
-        <div>
-            <p>I go by the name Blieque Mariguan, and I like to make websites and other computer-centric things.</p>
-            <p>I'm currently in the process of building myself a portfolio website, but if you're curious there are other things to see in the meantime.</p>
+        <div class="layout__flex-container">
+            <div class="layout__background">
+                <div class="layout__canvas-frame"><canvas></canvas></div>
+            </div>
+            <div class="layout__content content">
+                <div class="content__col">
+                    <h1 class="content__name">
+                        <span class="content__name-wrapper">Lucien Walters</span>
+                    </h1>
+                    <h3 class="content__profession">Designer and Developer</h3>
+                </div>
+                <div class="content__col">
+                    <p class="content__description">Something or <a href="/">other</a>.</p>
+                </div>
+            </div>
+        </div>
+        <!--
             <ul>
                 <li><a href="https://github.com/blieque">GitHub</a> &mdash; I like to use GitHub to keep track of projects online; who doesn't?</li>
                 <li><a href="https://twitter.com/blieque">@blieque</a> &mdash; I complain in one hundred and forty characters &ndash; no more, no less &ndash; on occasion.</li>
@@ -34,8 +43,7 @@
                 <li><a href="http://lab.blieque.co.uk">lab.blieque</a> &mdash; I experiment, primarily with JavaScript, and build little web apps.</li>
                 <li><a href="http://file.blieque.co.uk">file.blieque</a> &mdash; I have a place I use as a filestore.</li>
             </ul>
-        </div>
-        </main>
+        -->
         <script src="app.min.js"></script>
     </body>
 
