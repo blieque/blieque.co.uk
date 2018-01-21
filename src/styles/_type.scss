@@ -1,16 +1,84 @@
 @font-face {
     font-family:'droid sans';
-    src:url('static/fonts/droid-sans.eot?') format('eot'),
-        url('static/fonts/droid-sans.woff') format('woff'),
-        url('static/fonts/droid-sans.ttf') format('truetype');
+    src:url('static/fonts/droid-sans.eot');
+    src:url('static/fonts/droid-sans.eot?') format('embedded-opentype'),
+        url('static/fonts/droid-sans.woff') format('woff');
     font-weight:normal;
     font-style:normal;
 }
 @font-face {
     font-family:'droid sans';
-    src:url('static/fonts/droid-sans-bold.eot?') format('eot'),
-        url('static/fonts/droid-sans-bold.woff') format('woff'),
-        url('static/fonts/droid-sans-bold.ttf') format('truetype');
+    src:url('static/fonts/droid-sans-bold.eot');
+    src:url('static/fonts/droid-sans-bold.eot?') format('embedded-opentype'),
+        url('static/fonts/droid-sans-bold.woff') format('woff');
     font-weight:bold;
     font-style:normal;
+}
+
+@font-face {
+    font-family: 'overpass mono';
+    src: url('static/fonts/overpass-mono-light.eot');
+    src: url('static/fonts/overpass-mono-light.eot?') format('embedded-opentype'),
+         url('static/fonts/overpass-mono-light.woff2') format('woff2'),
+         url('static/fonts/overpass-mono-light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'overpass mono';
+    src: url('static/fonts/overpass-mono-regular.eot');
+    src: url('static/fonts/overpass-mono-regular.eot?#iefix') format('embedded-opentype'),
+       url('static/fonts/overpass-mono-regular.woff2') format('woff2'),
+       url('static/fonts/overpass-mono-regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'overpass mono';
+    src: url('static/fonts/overpass-mono-semibold.eot');
+    src: url('static/fonts/overpass-mono-semibold.eot?#iefix') format('embedded-opentype'),
+       url('static/fonts/overpass-mono-semibold.woff2') format('woff2'),
+       url('static/fonts/overpass-mono-semibold.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'overpass mono';
+    src: url('static/fonts/overpass-mono-bold.eot');
+    src: url('static/fonts/overpass-mono-bold.eot?#iefix') format('embedded-opentype'),
+       url('static/fonts/overpass-mono-bold.woff2') format('woff2'),
+       url('static/fonts/overpass-mono-bold.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'cmu serif';
+    src: url('static/fonts/cmunrm.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'cmu serif';
+    src: url('static/fonts/cmunti.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'cmu serif';
+    src: url('static/fonts/cmunbx.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'cmu serif';
+    src: url('static/fonts/cmunbi.woff') format('woff');
+    font-weight: 700;
+    font-style: italic;
 }
