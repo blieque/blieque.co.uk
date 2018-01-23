@@ -237,7 +237,8 @@ const resize = function resize() {
 
 /* Optionally generates a new tile distribution and colour scheme, then calls
  * `draw()' to draw a pattern on the canvas. If a new distribution and scheme
- * are not requested, the last one used will be re-used.
+ * are not requested, the last one used will be re-used. A closure is used to
+ * store the two arrays privately.
  */
 const updatePattern = (() => {
     let distribution;
@@ -252,7 +253,14 @@ const updatePattern = (() => {
             }
         }
         draw(distribution, scheme);
-        el.nameHeading.style.setProperty('--shadow-color', scheme[0]);
+
+        //el.nameHeading.style.setProperty('--shadow-color', scheme[0]);
+        el.refresherDot.style.background = scheme.background;
+
+        return {
+            distribution,
+            scheme,
+        };
     };
 })();
 
@@ -262,12 +270,20 @@ const el = {};
 el.canvasFrame = document.querySelector('.layout__canvas-frame');
 el.canvas = document.querySelector('canvas');
 el.nameHeading = document.querySelector('.content__name');
+el.refresher = document.querySelector('.refresher');
+el.refresherDot = document.querySelector('.refresher__dot');
 
 const ctx = el.canvas.getContext('2d');
 const pixelRatio = Math.round(window.devicePixelRatio + 0.5);
 
 window.addEventListener('resize', resize);
 resize(); // Will also call `updatePattern()'.
-window.addEventListener('click', () => {
-    updatePattern(true);
-});
+el.refresher.addEventListener('click', (() => {
+    let dotRotation = 0;
+
+    return () => {
+        updatePattern(true);
+        dotRotation += 90;
+        el.refresherDot.style.transform = `rotate(${dotRotation}deg)`;
+    }
+})());

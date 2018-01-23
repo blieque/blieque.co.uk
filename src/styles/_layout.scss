@@ -1,11 +1,11 @@
 body {
     margin: 0;
     font-family: 'overpass', sans-serif;
-    text-align: justify;
     height: 100vh;
 }
 
 * {
+    position: relative;
     box-sizing: border-box;
 }
 
