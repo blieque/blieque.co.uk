@@ -19,6 +19,12 @@
         }
     }
 
+    .content {
+        &__name-plate {
+            display: table-caption;
+        }
+    }
+
     .refresher {
         margin-right: -1.59rem;
     }

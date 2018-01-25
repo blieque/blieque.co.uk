@@ -20,14 +20,13 @@
         font-family: 'cmu serif', serif;
         font-weight: bold;
         font-style: italic;
-        letter-spacing: -0.02em;
         word-spacing: -0.12em;
-        --shadow-color: transparent;
 
         /* Adds a shadow to the name text which can be altered easily by
          * JavaScript.
          */
     /*
+        --shadow-color: transparent;
         @supports (--css: 0) {
             text-shadow:
                 0.5px 0.5px 0 #fff,
@@ -39,10 +38,19 @@
         }
         */
 
+        /* `table-caption' causes the size of the name box to shrink to fit its
+         * contents rather than fill its container when the name is wrapped on
+         * narrow screens.
+         *
+         * The `text-indent' property below aligns the first and last names when
+         * they are wrapped on narrow screens. The font's metrics cause the "W"
+         * in my surname to appear indented, and these rules correct for this.
+         */
         &-plate {
             display: inline-block;
-            padding: 0.5rem 1.3rem 0 1rem;
+            padding: 0.5rem 1.3rem 0 0.6rem;
             background: #fff;
+            text-indent: 0.4rem;
         }
     }
 

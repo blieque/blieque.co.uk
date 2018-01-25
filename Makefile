@@ -26,8 +26,8 @@ $(output):
 	@mkdir $(output)
 
 markup: $(markup_list_out)
-$(output)/%.html: $(source)/%.html
 	@echo "Minifying markup"
+$(output)/%.html: $(source)/%.html
 	@html-minifier \
 		--collapse-whitespace \
 		--collapse-boolean-attributes \
@@ -43,19 +43,28 @@ $(output)/%.html: $(source)/%.html
 styles: $(output)/main.min.css
 $(output)/main.min.css: $(shell find $(source)/styles -type f)
 	@echo "Compiling and minifying styles"
-	@node-sass $(source)/styles/main.scss $(output)/main.css
-	@cleancss -o $(output)/main.min.css $(output)/main.css > /dev/null
+	@node-sass $(source)/styles/main.scss $(output)/main.min.css
+	@if [[ "$(NODE_ENV)" == "production" ]]; then \
+		cleancss -o $(output)/main.min.css $(output)/main.min.css > /dev/null; \
+	fi
 
+# Babel is run twice due to a bug with `babel-cli' preset ordering.
+#  https://github.com/babel/babel/issues/6059 (closed)
+#  https://github.com/babel/minify/issues/646
 scripts: $(output)/app.min.js
 $(output)/app.min.js: $(source)/scripts/app.js
 	@echo "Transpiling and minifying scripts"
-	@#babel --presets babili -o $(output)/app.min.js $(source)/scripts/app.js
-	@babel -o $(output)/app.min.js $(source)/scripts/app.js
+	@if [[ "$(NODE_ENV)" == "production" ]]; then \
+		babel --presets env -o $(output)/app.js $(source)/scripts/app.js; \
+		babel --presets babili -o $(output)/app.min.js $(output)/app.js; \
+	else \
+		babel -o $(output)/app.min.js $(source)/scripts/app.js; \
+	fi
 
-# These two will probably always run when `make' runs, as last-modification
-# timestamps on directories aren't updated when their contents are modified.
-# This makes it hard for `make' to know if the dependencies have updated.
-# Luckily we can leave the cleverness to `cp' instead.
+# This will always run when `make' runs, as last-modification timestamps on
+# directories aren't updated when their contents are modified. This makes it
+# hard for `make' to know if the dependencies have updated. Luckily we can leave
+# the cleverness to `rsync' instead.
 static: $(output)/static
 $(output)/static: $(static_list)
 	@echo "Copying static assets"
@@ -72,6 +81,10 @@ $(output)/static: $(static_list)
 
 build: setup markup styles scripts static
 
+production:
+	@echo "Building for production"
+	@NODE_ENV="production" make build
+
 watch:
 	@echo "Building then watching for changes"
 	@echo "Press ^C to stop (ignore any \`make' recipe errors)"
@@ -79,9 +92,3 @@ watch:
 		make build -s; \
 		inotifywait --exclude .git -qqre close_write . || true; \
 	done
-
-server:
-	@echo Starting server
-	@npm start & \
-		make watch -s; \
-		trap 'kill -KILL $$(jobs -p)' SIGINT SIGTERM EXIT
