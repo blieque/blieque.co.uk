@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Blieque Mariguan</title>
+        <link rel="apple-touch-icon-precomposed" type="image/png" href="static/images/icon/180.png" sizes="180x180">
+        <link rel="icon" type="image/png" href="static/images/icon/192.png" sizes="192x192">
+        <link rel="icon" type="image/png" href="static/images/icon/096.png" sizes="96x96">
+        <link rel="icon" type="image/png" href="static/images/icon/048.png" sizes="48x48">
+        <link rel="icon" type="image/png" href="static/images/icon/032.png" sizes="32x32">
+        <link rel="icon" type="image/png" href="static/images/icon/016.png" sizes="16x16">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta charset="utf-8">
+        <style>
+            /* 1.77877095
+             * 0.55937499
+             */
+            body {
+                margin: 0;
+                display: flex;
+                height: 100vh;
+                cursor: pointer;
+                flex-direction: column;
+                justify-content: center;
+            }
+            div {
+                box-sizing: border-box;
+            }
+            .scaler {
+                position: relative;
+                margin: 0 auto;
+                width: 100%;
+                max-width: 178.877vh;
+            }
+            .scaler::after {
+                content: '';
+                display: block;
+                padding-top: 55.937%;
+            }
+            .row-frame {
+                display: flex;
+                flex-direction: column;
+                justify-content: space-evenly;
+                position: absolute;
+                top: 0;
+                right: 0;
+                bottom: 0;
+                left: 0;
+            }
+            .swatch-row {
+                display: flex;
+                width: 100%;
+                justify-content: space-evenly;
+            }
+            .swatch {
+                width: 10%;
+                position: relative;
+            }
+            .swatch::after {
+                content: '';
+                display: block;
+                padding-top: 100%;
+            }
+
+            .wheel-frame {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                width: 100px;
+                height: 100px;
+            }
+            .wheel {
+                position: absolute;
+                border-radius: 50%;
+                width: 82%;
+                height: 82%;
+                top: 9%;
+                left: 9%;
+                transition: ease-out transform 0.15s;
+            }
+            .wheel::after {
+                content: '';
+                display: block;
+                position: absolute;
+                width: 1px;
+                background: #fff;
+                height: 15%;
+                left: 50%;
+                top: 2px;
+            }
+            .wheel:last-child {
+                box-shadow: inset 0 0 0 2px #fff;
+            }
+            .wheel:last-child::after {
+                height: 25%;
+                width: 2px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="scaler">
+            <div class="row-frame">
+                <div class="swatch-row">
+                    <div class="swatch" id="s0">
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                        <div class="wheel"></div>
+                    </div>
+                    <div class="swatch" id="s1"></div>
+                    <div class="swatch" id="s2"></div>
+                    <div class="swatch" id="s3"></div>
+                </div>
+                <div class="swatch-row">
+                    <div class="swatch" id="s4"></div>
+                    <div class="swatch" id="s5"></div>
+                    <div class="swatch" id="s6"></div>
+                    <div class="swatch" id="s7"></div>
+                </div>
+            </div>
+        </div>
+        <div class="wheel-frame"></div>
+        <script>
+
+const toHSLString = function toHSLString(hue, saturation, lightness) {
+    hue = Math.round((hue + 360) % 360);
+    saturation = Math.round(saturation * 100);
+    lightness = Math.round(lightness * 100);
+
+    return `hsl(${hue},${saturation}%,${lightness}%)`;
+};
+
+const generateScheme = function generateScheme() {
+    const backgroundLightness = ((Math.random() - 0.5) * 1.58) ** 3 + 0.5;
+    const darkOnLightThreshold = 0.7;
+    let lightnessRange;
+    let lightnessOffset;
+
+    if (backgroundLightness > darkOnLightThreshold) {
+        lightnessRange = backgroundLightness;
+        lightnessOffset = 0;
+    } else {
+        lightnessRange = (1 - backgroundLightness);
+        lightnessOffset = backgroundLightness;
+    }
+
+    const lightnessScale = 0.2 + 0.6 * Math.random();
+    lightnessOffset +=
+        lightnessRange * (1 - lightnessScale) * Math.random();
+    lightnessRange *= lightnessScale;
+
+    const baseHue = Math.random() * 360;
+    const hueRange = 30 + 90 * Math.random();
+    const hueOffsetMax = 90;
+    const hueOffset =
+        -hueOffsetMax + hueOffsetMax * 2 * Math.random() - (hueRange / 2);
+    const saturation = 0.4 + 0.5 * (1 - (1 - Math.random()) ** 1.5);
+
+    const scheme = [];
+    scheme.background = [baseHue, saturation * 0.7, backgroundLightness];
+
+    const hueStep = hueRange / 7;
+    for (let i = 0; i < 8; i++) {
+        const hueRaw = baseHue + hueOffset + hueStep * i;
+        const hue = Math.round((hueRaw + 360) % 360);
+        const lightness = lightnessOffset + lightnessRange * Math.random();
+        scheme.push([hue, saturation, lightness]);
+    }
+
+    return scheme;
+};
+
+const hslToHex = function hslToHex(hue, saturation, lightness) {
+    /* Algorithm from Wikipedia. */
+    const chroma = (1 - Math.abs(2 * lightness - 1)) * saturation;
+    const hueDivision = hue / 60;
+    const x = chroma * (1 - Math.abs(hueDivision % 2 - 1));
+
+    let hueDivisionFloor = Math.floor(hueDivision);
+    let rgb;
+    if (hueDivisionFloor % 2 === 0) {
+        rgb = [chroma, x, 0];
+    } else {
+        hueDivisionFloor--;
+        rgb = [x, chroma, 0];
+    }
+    for (let i = 0; i < hueDivisionFloor; i += 2) {
+        console.log('sheeft');
+        rgb.push(rgb.shift());
+    }
+
+    const m = lightness - (chroma / 2);
+    for (let i = 0; i < 3; i++) {
+        rgb[i] = Math.floor((rgb[i] + m) * 255);
+    }
+
+    return '#' + rgb.map(v => v.toString(16).padStart(2, '0')).join('');
+};
+
+const changeItUp = function changeItUp() {
+    const scheme = generateScheme();
+
+    document.body.style.backgroundColor = hslToHex(...scheme.background);
+    scheme.forEach((color, i) => {
+        window[`s${i}`].style.backgroundColor = hslToHex(...color);
+    });
+
+    /* Update the hue indicator wheels. */
+    const wheels = document.querySelectorAll('.wheel');
+    scheme.forEach((color, i) => {
+        wheels[i].style.transform = `rotate(${scheme[i][0]}deg)`;
+    });
+    wheels[8].style.transform = `rotate(${scheme.background[0]}deg)`;
+};
+
+changeItUp();
+window.addEventListener('click', changeItUp);
+
+        </script>
+    </body>
+
+</html>

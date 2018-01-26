@@ -1,0 +1,20 @@
+.refresher {
+    margin: -1rem -0.59rem 0 0.41rem;
+    width: 2rem;
+    height: 2rem;
+    background: #fff;
+    transform: rotate(45deg);
+    cursor: pointer;
+    user-select: none;
+
+    &__dot {
+        display: block;
+        position: absolute;
+        top: .5rem;
+        left: .5rem;
+        width: 1rem;
+        height: 1rem;
+        background: #222;
+        transition: ease all 0.1s;
+    }
+}

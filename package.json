@@ -1,0 +1,36 @@
+{
+  "name": "blieque.co.uk",
+  "version": "1.0.0",
+  "description": "A small web profile-type site.",
+  "main": "",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "./node_modules/.bin/nodemon -i src/public src/index.js",
+    "build": "make build",
+    "build-markup": "make markup",
+    "build-styles": "make styles",
+    "build-static": "make static",
+    "clean": "make clean",
+    "watch": "make watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/blieque/blieque.co.uk.git"
+  },
+  "author": "Blieque Mariguan <himself@blieque.co.uk>",
+  "license": "",
+  "bugs": {
+    "url": "https://github.com/blieque/blieque.co.uk/issues"
+  },
+  "homepage": "https://github.com/blieque/blieque.co.uk#readme",
+  "devDependencies": {
+    "babel": "^6.23.0",
+    "babel-cli": "^6.24.1",
+    "babel-preset-babili": "^0.1.4",
+    "babel-preset-env": "^1.6.0",
+    "clean-css-cli": "^4.1.6",
+    "html-minifier": "^3.5.2",
+    "node-sass": "^4.5.3",
+    "nodemon": "^1.11.0"
+  }
+}

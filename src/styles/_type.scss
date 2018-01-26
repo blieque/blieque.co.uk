@@ -1,0 +1,23 @@
+@font-face {
+    font-family: 'overpass mono';
+    src: url('static/fonts/overpass-mono-bold.eot');
+    src: url('static/fonts/overpass-mono-bold.eot?#iefix') format('embedded-opentype'),
+         url('static/fonts/overpass-mono-bold.woff2') format('woff2'),
+         url('static/fonts/overpass-mono-bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'cmu serif';
+    src: url('static/fonts/cmunti.woff') format('woff');
+    font-weight: 400;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: 'cmu serif';
+    src: url('static/fonts/cmunbi.woff') format('woff');
+    font-weight: 700;
+    font-style: italic;
+}

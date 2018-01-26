@@ -1,0 +1,37 @@
+@media (max-width:26cm) {
+    .content--text {
+        flex-direction: column;
+
+        .content__col:nth-child(2) {
+            margin-right: -2rem;
+            max-width: 64cm;
+        }
+    }
+}
+
+@media (max-width:16cm) {
+    .layout {
+        &__background {
+            padding: 2rem 2rem 0;
+        }
+        &__content {
+            padding: 0 5rem 2rem;
+        }
+    }
+
+    .content {
+        &__name-plate {
+            display: table-caption;
+        }
+    }
+
+    .refresher {
+        margin-right: -1.59rem;
+    }
+}
+
+@media (max-width:12cm) {
+    :root {
+        font-size: 80%;
+    }
+}
