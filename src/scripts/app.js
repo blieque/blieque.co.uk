@@ -1,4 +1,4 @@
-// TILES CACHE
+/* TILES CACHE */
 
 const tiles = [
     // "X"
@@ -44,14 +44,14 @@ const tiles = [
      * size of the big number arrays above.
      */
     for (let y = 5; y >= 0; y--) {
-        const row = tile[y].slice(0).reverse();
+        const row = tile[y].slice().reverse();
         tile.push(row);
     }
 
     return tile;
 });
 
-// FUNCTIONS
+/* FUNCTIONS */
 
 const generateDistribution = function generateDistribution() {
     /* I want the highest proportion of the tiles drawn to be blank. This line
@@ -68,7 +68,7 @@ const generateDistribution = function generateDistribution() {
     const pickCount = 2 + Math.floor(Math.random() * (tiles.length - 2))
     const pickPoints = [];
     const picks = [];
-    const tilesCopy = tiles.slice(0);
+    const tilesCopy = tiles.slice();
     for (let i = 0; i < pickCount; i++) {
         /* We only need to generate (x - 1) points to distribute (x) picks, so
          * we don't bother generating a point on the first iteration.
@@ -96,7 +96,6 @@ const generateScheme = function generateScheme() {
     /* Background lightness has a pretty strong bias towards 50%, making very
      * light and very dark backgrounds a lot rarely than they'd otherwise be.
      */
-    //const backgroundLightness = ((Math.random() - 0.5) * 1.58) ** 3 + 0.5;
     const x = Math.random();
     const backgroundLightness = (1.1 * (x - 0.5)) ** 3 + 0.1 * x + 0.17;
     let lightnessRange;
@@ -108,7 +107,6 @@ const generateScheme = function generateScheme() {
     lightnessRange = (1 - backgroundLightness) * 0.8;
     lightnessOffset = backgroundLightness + lightnessRange * 0.25;
 
-    //const lightnessScale = 0.3 + 0.5 * Math.random();
     const lightnessScale = 0.8;
     lightnessOffset +=
         lightnessRange * (1 - lightnessScale) * Math.random();
@@ -148,11 +146,19 @@ const generateScheme = function generateScheme() {
      * colour an alias.
      */
     scheme.push([baseHue, saturation * 0.5, backgroundLightness]);
-    Object.defineProperty(scheme, 'background', { get(){
-        return scheme[scheme.length - 1];
-    } });
+    addBackgroundGetter(scheme);
 
     return scheme;
+};
+
+/* This is pretty stupid, let's not kid ourselves.
+ */
+const addBackgroundGetter = function addBackgroundGetter(obj) {
+    if (Array.isArray(obj)) {
+        Object.defineProperty(obj, 'background', { get(){
+            return obj[obj.length - 1];
+        } });
+    }
 };
 
 /* HSL to RGB hex converter, based on an algorithm available on Wikipedia.
@@ -230,8 +236,8 @@ const draw = function draw(distribution, scheme) {
  * generator function to refresh the pattern.
  */
 const resize = function resize() {
-    el.canvas.width = el.canvasFrame.clientWidth;
-    el.canvas.height = el.canvasFrame.clientHeight;
+    el.canvas.width = el.canvasFrame.clientWidth * adjustmentRatio;
+    el.canvas.height = el.canvasFrame.clientHeight * adjustmentRatio;
     updatePattern();
 };
 
@@ -243,38 +249,40 @@ const resize = function resize() {
 const updatePattern = (() => {
     let distribution;
     let scheme;
+    let schemeHex;
 
     return (newEntropy) => {
         if (newEntropy || !distribution) {
             distribution = generateDistribution();
             scheme = generateScheme();
-            for (let i = 0; i < 9; i++) {
-                scheme[i] = hslToHex(...scheme[i]);
-            }
+            schemeHex = scheme.map(c => hslToHex(...c));
+            addBackgroundGetter(schemeHex);
         }
-        draw(distribution, scheme);
+        draw(distribution, schemeHex);
 
         //el.nameHeading.style.setProperty('--shadow-color', scheme[0]);
-        el.refresherDot.style.background = scheme.background;
-
-        return {
-            distribution,
-            scheme,
-        };
+        el.refresherDot.style.background = schemeHex.background;
+        el.metaThemeColor.content = hslToHex(scheme.background[0], 0.3, 0.7);
     };
 })();
 
-// BOOTSTRAPPY STUFF
+/* BOOTSTRAPPY STUFF */
 
 const el = {};
+el.metaThemeColor = document.querySelector('.meta__theme-color');
 el.canvasFrame = document.querySelector('.layout__canvas-frame');
-el.canvas = document.querySelector('canvas');
-el.nameHeading = document.querySelector('.content__name');
+el.canvas = document.querySelector('.layout__canvas');
+//el.nameHeading = document.querySelector('.content__name');
 el.refresher = document.querySelector('.refresher');
 el.refresherDot = document.querySelector('.refresher__dot');
 
 const ctx = el.canvas.getContext('2d');
-const pixelRatio = Math.round(window.devicePixelRatio + 0.5);
+
+/* For devices whose stupid manufacturers that think a non-integer device pixel
+ * ratio is remotely sane.
+ */
+const adjustmentRatio =
+    window.devicePixelRatio / Math.round(window.devicePixelRatio);
 
 window.addEventListener('resize', resize);
 resize(); // Will also call `updatePattern()'.

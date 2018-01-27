@@ -6,15 +6,16 @@
     transform: rotate(45deg);
     cursor: pointer;
     user-select: none;
+    -webkit-tap-highlight-color: transparent;
 
     &__dot {
         display: block;
         position: absolute;
-        top: .5rem;
-        left: .5rem;
+        top: 0.51rem;
+        left: 0.51rem;
         width: 1rem;
         height: 1rem;
         background: #222;
-        transition: ease all 0.1s;
+        transition: ease all 0.2s;
     }
 }

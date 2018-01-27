@@ -1,4 +1,4 @@
-@media (max-width:26cm) {
+@media (max-width: 26cm) {
     .content--text {
         flex-direction: column;
 
@@ -9,16 +9,19 @@
     }
 }
 
-@media (max-width:16cm) {
+@media (max-width: 16cm),
+(max-width: 22cm) and (max-height: 16cm) and (orientation: landscape) {
     .layout {
         &__background {
             padding: 2rem 2rem 0;
         }
         &__content {
-            padding: 0 5rem 2rem;
+            padding: 0 5rem 3rem;
         }
     }
+}
 
+@media (max-width: 16cm) {
     .content {
         &__name-plate {
             display: table-caption;
@@ -30,7 +33,7 @@
     }
 }
 
-@media (max-width:12cm) {
+@media (max-width: 12cm) {
     :root {
         font-size: 80%;
     }

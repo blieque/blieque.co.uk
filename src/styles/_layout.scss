@@ -1,7 +1,12 @@
+:root,
+html,
+body {
+    height: 100%;
+}
+
 body {
     margin: 0;
     font-family: 'overpass mono', sans-serif;
-    height: 100vh;
 }
 
 * {
@@ -26,6 +31,12 @@ body {
         height: 100%;
         background: black;
     }
+    &__canvas {
+        position: absolute;
+        width: 100%;
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: pixelated;
+    }
 
     &__content {
         min-height: 4rem;
@@ -35,8 +46,4 @@ body {
             margin-bottom: 0;
         }
     }
-}
-
-canvas {
-    position: absolute;
 }
