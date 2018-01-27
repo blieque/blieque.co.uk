@@ -6,7 +6,7 @@
 
         .content__col:nth-child(1) {
             flex-shrink: 0;
-            padding-right: 1rem;
+            padding-right: 2rem;
         }
         .content__col:nth-child(2) {
             flex-grow: 1;
@@ -15,12 +15,13 @@
     }
 
     &__name {
-        margin: -1.9rem 0 0 -1.15rem;
-        font-size: 28pt;
+        margin: -1.9rem -2rem 0 -1.15rem;
+        font-size: 26pt;
         font-family: 'cmu serif', serif;
         font-weight: bold;
         font-style: italic;
         word-spacing: -0.12em;
+        text-shadow: 0 0 0 rgba(0, 0, 0, 0.4);
 
         /* Adds a shadow to the name text which can be altered easily by
          * JavaScript.
@@ -57,7 +58,7 @@
     &__profession {
         margin: 0.5rem 0 0;
         text-transform: uppercase;
-        font-size: 80%;
+        font-size: 85%;
         letter-spacing: 0.05em;
         word-spacing: 0.1em;
     }
@@ -67,6 +68,7 @@
         font-family: 'cmu serif', serif;
         font-style: italic;
         font-size: 13pt;
+        text-shadow: 0 0 0 rgba(0, 0, 0, 0.3);
 
         & + & {
             margin-top: 0.6em;
@@ -74,6 +76,7 @@
 
         a {
             font-size: 90%;
+            text-shadow: none;
         }
     }
 }
