@@ -15,12 +15,12 @@ $(output):
 	@echo "Creating output directory"
 	@[[ -d $(output) ]] || mkdir $(output)
 
-markup: $(output)/index.html
+markup: $(output)/index.html $(output)/colo.html
 	@echo "Minifying markup"
 $(output)/%.html: $(source)/%.html
 	@node ./minify-html.js $< $@
 
-styles: $(output)/main.min.css
+styles: $(output)/main.min.css $(output)/colo.min.css
 $(output)/%.min.css: $(source)/styles/%.scss $(shell find $(source)/styles -type f)
 	@echo "Compiling and minifying styles: $<"
 	@npx sass $< $@
@@ -28,7 +28,7 @@ $(output)/%.min.css: $(source)/styles/%.scss $(shell find $(source)/styles -type
 		npx cleancss -o $@ $@ > /dev/null; \
 	fi
 
-scripts: $(output)/app.min.js
+scripts: $(output)/app.min.js $(output)/colo.min.js
 $(output)/%.min.js: $(source)/scripts/%.js
 	@echo "Transpiling and minifying scripts: $<"
 	@if [[ "$(NODE_ENV)" == "production" ]]; then \
