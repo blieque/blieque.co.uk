@@ -16,8 +16,8 @@ $(output):
 	@[[ -d $(output) ]] || mkdir $(output)
 
 markup: $(output)/index.html $(output)/colo.html
-	@echo "Minifying markup"
 $(output)/%.html: $(source)/%.html
+	@echo "Minifying markup: $<"
 	@node ./minify-html.js $< $@
 
 styles: $(output)/main.min.css $(output)/colo.min.css
@@ -64,7 +64,8 @@ production:
 watch:
 	@echo "Building then watching for changes"
 	@echo "Press ^C to stop (ignore any \`make' recipe errors)"
-	@while true; do \
-		make build -s; \
-		fswatch --exclude .git -r . || true; \
-	done
+	@prefix_length="$${#PWD}"; \
+	fswatch -r . \
+		| stdbuf -oL cut -c "$$((prefix_length + 2))-" \
+		| grep --line-buffered -vE '^(\.git|dist)' \
+		| while read f; do make build -s; done

@@ -5,6 +5,7 @@ htmlnano
   .process(
     readFileSync(process.argv[2]),
     {
+      collapseWhitespace: 'aggressive',
       minifyCss: false,
       minifyJs: false,
       minifySvg: false,
