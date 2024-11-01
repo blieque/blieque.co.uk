@@ -241,6 +241,9 @@ const resize = function resize() {
     updatePattern();
 };
 
+let refresherIsAcknowledged = false;
+let idleAnimationCount = -1;
+
 /* Optionally generates a new tile distribution and colour scheme, then calls
  * `draw()' to draw a pattern on the canvas. If a new distribution and scheme
  * are not requested, the last one used will be re-used. A closure is used to
@@ -290,8 +293,44 @@ el.refresher.addEventListener('click', (() => {
     let dotRotation = 0;
 
     return () => {
+        if (idleAnimationCount >= 0) refresherIsAcknowledged = true;
+
         updatePattern(true);
         dotRotation += 90;
         el.refresherDot.style.transform = `rotate(${dotRotation}deg)`;
     }
 })());
+
+const joints = Array.from(document.querySelectorAll('.refresher__upper-arm, .refresher__middle-arm, .refresher__lower-arm, .refresher__hand'));
+const button = document.querySelector('button');
+const input = document.querySelector('input');
+
+const endIdleAnimation = function endIdleAnimation(event) {
+    console.log('animationiteration')
+    if (event.target == joints[0] && !event.animationName.includes('-part-')) {
+        idleAnimationCount++;
+
+        if (refresherIsAcknowledged) {
+            joints[0].parentElement.classList.remove('refresher--animate-idle');
+            const outroID = idleAnimationCount % 2 == 0 ? 'a' : 'b';
+            joints[0].parentElement.classList.add(`refresher--animate-outro-${outroID}`);
+        }
+    }
+};
+
+const endIntroAnimation = function endIntroAnimation(event) {
+    console.log('animationend')
+    if (event.target == joints[0] && !event.animationName.includes('-part-')) {
+        console.log('animationend upper-arm')
+        joints[0].parentElement.classList.remove('refresher--animate-intro');
+        joints[0].parentElement.classList.add('refresher--animate-idle');
+
+        joints[0].removeEventListener('animationend', endIntroAnimation);
+        joints[0].addEventListener('animationiteration', endIdleAnimation);
+        idleAnimationCount = 0;
+        console.log('animationend2');
+    }
+}
+
+joints[0].parentElement.classList.add('refresher--animate-intro');
+joints[0].addEventListener('animationend', endIntroAnimation);

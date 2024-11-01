@@ -15,29 +15,13 @@
     }
 
     &__name {
-        margin: -1.9rem -2rem 0 -1.15rem;
-        font-size: 26pt;
+        margin: -1.75rem -2rem 0 -1.15rem;
+        font-size: 2rem;
         font-family: 'cmu serif', serif;
         font-weight: bold;
         font-style: italic;
         word-spacing: -0.12em;
         text-shadow: 0 0 0 rgba(0, 0, 0, 0.4);
-
-        /* Adds a shadow to the name text which can be altered easily by
-         * JavaScript.
-         */
-    /*
-        --shadow-color: transparent;
-        @supports (--css: 0) {
-            text-shadow:
-                0.5px 0.5px 0 #fff,
-                1px 1px 0 #fff,
-                1.5px 1.5px 0 #fff,
-                2px 2px 0 var(--shadow-color),
-                2.5px 2.5px 0 var(--shadow-color),
-                3px 3px 0 var(--shadow-color);
-        }
-        */
 
         /* `table-caption' causes the size of the name box to shrink to fit its
          * contents rather than fill its container when the name is wrapped on
@@ -77,6 +61,13 @@
         a {
             font-size: 90%;
             text-shadow: none;
+        }
+
+        span {
+            top: -0.05em;
+            font-family: 'overpass mono', sans-serif;
+            font-style: normal;
+            font-size: 0.75em;
         }
     }
 }

@@ -1,16 +1,15 @@
-@media (max-width: 26cm) {
+@media (max-width: 62rem) {
     .content--text {
         flex-direction: column;
 
         .content__col:nth-child(2) {
             margin-right: -2rem;
-            max-width: 64cm;
         }
     }
 }
 
-@media (max-width: 16cm),
-(max-width: 22cm) and (max-height: 16cm) and (orientation: landscape) {
+@media (max-width: 38rem),
+(max-width: 52rem) and (max-height: 38rem) and (orientation: landscape) {
     .layout {
         &__background {
             padding: 2rem 2rem 0;
@@ -21,10 +20,17 @@
     }
 }
 
-@media (max-width: 16cm) {
+@media (max-width: 38rem) {
     .content {
         &__name-plate {
             display: table-caption;
+        }
+        &__description {
+            span {
+                display: block;
+                height: 0;
+                visibility: hidden;
+            }
         }
     }
 
@@ -33,7 +39,7 @@
     }
 }
 
-@media (max-width: 12cm) {
+@media (max-width: 28rem) {
     :root {
         font-size: 80%;
     }

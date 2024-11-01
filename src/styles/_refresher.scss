@@ -1,12 +1,20 @@
 .refresher {
-    margin: -1rem -0.59rem 0 0.41rem;
-    width: 2rem;
-    height: 2rem;
-    background: #fff;
-    transform: rotate(45deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: -1.41rem -1.15rem 0 0.41rem;
+    width: 2.82rem;
+    height: 2.82rem;
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+
+    &__frame {
+        width: 2rem;
+        height: 2rem;
+        background: #fff;
+        transform: rotate(45deg);
+    }
 
     &__dot {
         display: block;
@@ -17,5 +25,282 @@
         height: 1rem;
         background: #222;
         transition: ease all 0.2s;
+    }
+
+    $border-width: 2px;
+    $bar-thickness: 6px;
+    $spur-length: 10px;
+    $pin-diameter: 4px;
+
+    &__upper-arm,
+    &__middle-arm,
+    &__lower-arm,
+    &__hand {
+        position: absolute;
+        box-sizing: content-box;
+        height: $bar-thickness;
+        background: #fff;
+        border: $border-width solid #000;
+        border-radius: 1000px;
+        transform-origin: calc(100% - (($bar-thickness / 2) + $border-width + $spur-length)) center;
+    }
+
+    &__upper-arm {
+        top: -12.2rem;
+        right: calc(1.15rem - 3rem - 4rem - 1rem - (($bar-thickness / 2) + $border-width + $spur-length));
+        pointer-events: none;
+    }
+
+    &__upper-arm {
+        width: 120px + $bar-thickness + $spur-length;
+    }
+    &__middle-arm {
+        width: 100px + $bar-thickness + $spur-length;
+    }
+    &__lower-arm {
+        width: 80px + $bar-thickness + $spur-length;
+    }
+    &__middle-arm,
+    &__lower-arm,
+    &__hand {
+        top: -2px;
+        right: calc(100% - ($bar-thickness + $border-width + $spur-length));
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: ($bar-thickness / 2) - ($pin-diameter / 2);
+            right: ($bar-thickness / 2) - ($pin-diameter / 2) + $spur-length;
+            width: $pin-diameter;
+            height: $pin-diameter;
+            border-radius: 1000px;
+            background: #000;
+        }
+    }
+    &__hand {
+        width: 30px + $bar-thickness / 2 + $spur-length;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+
+        // &::before {
+        //     content: "";
+        //     position: absolute;
+        //     top: -4.5px;
+        //     right: 100%;
+        //     width: 1000%;
+        //     height: 4px;
+        //     border-radius: 10px;
+        //     background: #000;
+        //     background: pink;
+        //     opacity: 0.6;
+        // }
+
+        &::after {
+            content: '';
+            position: absolute;
+            top: ($bar-thickness / 2) - (32px / 2) - 2.5px;
+            left: -36px;
+            width: 36px;
+            height: 32px;
+            background: url('/static/images/prod.svg');
+            background-size: 100%;
+            background-position: 0 100%;
+            background-repeat: no-repeat;
+        }
+    }
+
+    $duration-intro: 3s;
+    $duration-idle: 0.5s;
+    $duration-outro: 3s;
+
+    @keyframes refresher__upper-arm--intro {
+        0% { transform: rotate(90deg); }
+        100% { transform: rotate(10deg); }
+    }
+    @keyframes refresher__middle-arm--intro {
+        0% { transform: rotate(90deg); }
+        100% { transform: rotate(-136deg); }
+    }
+    @keyframes refresher__lower-arm--intro {
+        0% { transform: rotate(80deg); }
+        100% { transform: rotate(93deg); }
+    }
+    @keyframes refresher__hand--intro-part-1 {
+        0% { transform: rotate(-90deg); }
+        100% { transform: rotate(-140deg); }
+    }
+    @keyframes refresher__hand--intro-part-2 {
+        0% { transform: rotate(-140deg); }
+        100% { transform: rotate(-62.87deg); }
+    }
+    @keyframes refresher__hand--intro {
+        0% { transform: rotate(-62.87deg); }
+        100% { transform: rotate(-57deg); }
+    }
+
+    &--animate-intro &__upper-arm {
+        animation: refresher__upper-arm--intro  $duration-intro cubic-bezier(0.1, 0, 0.2, 1);
+    }
+    &--animate-intro &__middle-arm {
+        animation: refresher__middle-arm--intro $duration-intro cubic-bezier(0.5, 0, 0.4, 1);
+    }
+    &--animate-intro &__lower-arm {
+        animation: refresher__lower-arm--intro  $duration-intro cubic-bezier(0.88, -2.3, 0.83, 1);
+    }
+    &--animate-intro &__hand {
+        animation:
+            refresher__hand--intro-part-1 $duration-intro * 0.258 $duration-intro * 0.276 cubic-bezier(0.2, 0, 0.4, 1) both,
+            refresher__hand--intro-part-2 $duration-intro * 0.250 $duration-intro * 0.546 cubic-bezier(0.178, 0, 0.692, 0.791) forwards,
+            refresher__hand--intro        $duration-intro * 0.204 $duration-intro * 0.796 cubic-bezier(0.333, 2.444, 0.543, 1) forwards;
+    }
+
+    @keyframes refresher__upper-arm--idle {
+        0% { transform: rotate(10deg); }
+        100% { transform: rotate(13deg); }
+    }
+    @keyframes refresher__middle-arm--idle {
+        0% { transform: rotate(-136deg); }
+        100% { transform: rotate(-123deg); }
+    }
+    @keyframes refresher__lower-arm--idle {
+        0% { transform: rotate(93deg); }
+        100% { transform: rotate(53.1deg); }
+    }
+    @keyframes refresher__hand--idle {
+        0% { transform: rotate(-57deg); }
+        100% { transform: rotate(-33.1deg); }
+    }
+
+    &--animate-idle &__upper-arm {
+        animation: refresher__upper-arm--idle  $duration-idle cubic-bezier(0.7,0,0.65,1) infinite alternate;
+    }
+    &--animate-idle &__middle-arm {
+        animation: refresher__middle-arm--idle $duration-idle cubic-bezier(0.712,0,0.662,1) infinite alternate;
+    }
+    &--animate-idle &__lower-arm {
+        animation: refresher__lower-arm--idle  $duration-idle cubic-bezier(0.69,0,0.66,1) infinite alternate;
+    }
+    &--animate-idle &__hand {
+        animation: refresher__hand--idle       $duration-idle cubic-bezier(0.682,0,0.661,1) infinite alternate;
+    }
+
+    @keyframes refresher__upper-arm--outro-a-part-1 {
+        0% { transform: rotate(10deg); }
+        100% { transform: rotate(9deg); }
+    }
+    @keyframes refresher__upper-arm--outro-a {
+        0% { transform: rotate(9deg); }
+        100% { transform: rotate(90deg); }
+    }
+    @keyframes refresher__middle-arm--outro-a-part-1 {
+        0% { transform: rotate(-136deg); }
+        100% { transform: rotate(-136.7deg); }
+    }
+    @keyframes refresher__middle-arm--outro-a {
+        0% { transform: rotate(-136.7deg); }
+        100% { transform: rotate(90deg); }
+    }
+    @keyframes refresher__lower-arm--outro-a-part-1 {
+        0% { transform: rotate(93deg); }
+        100% { transform: rotate(74.7deg); }
+    }
+    @keyframes refresher__lower-arm--outro-a {
+        0% { transform: rotate(74.7deg); }
+        100% { transform: rotate(90deg); }
+    }
+    @keyframes refresher__hand--outro-a-part-1 {
+        0% { transform: rotate(-57deg); }
+        100% { transform: rotate(53deg); }
+    }
+    @keyframes refresher__hand--outro-a {
+        0% { transform: rotate(53deg); }
+        100% { transform: rotate(-140deg); }
+    }
+
+    &--animate-outro-a &__upper-arm {
+        animation:
+            refresher__upper-arm--outro-a-part-1 $duration-outro * 0.3 0s                    ease-in-out,
+            refresher__upper-arm--outro-a        $duration-outro * 0.7 $duration-outro * 0.3 cubic-bezier(0.25, 0, 0.51, 0.11);
+    }
+    &--animate-outro-a &__middle-arm {
+        animation:
+            refresher__middle-arm--outro-a-part-1 $duration-outro * 0.22 0s                     cubic-bezier(0.18, 0, 0.2, 5),
+            refresher__middle-arm--outro-a        $duration-outro * 0.78 $duration-outro * 0.22 cubic-bezier(0.6, 0.021, 0.9, 1);
+    }
+    &--animate-outro-a &__lower-arm {
+        animation:
+            refresher__lower-arm--outro-a-part-1 $duration-outro * 0.3 0s                    cubic-bezier(0.29, 0, 0.55, 1),
+            refresher__lower-arm--outro-a        $duration-outro * 0.7 $duration-outro * 0.3 cubic-bezier(0.29, 0, 0.4, 1);
+    }
+    &--animate-outro-a &__hand {
+        animation:
+        refresher__hand--outro-a-part-1 $duration-outro * 0.3 0s                    cubic-bezier(0.28, 0, 0.4, 1.2),
+        refresher__hand--outro-a        $duration-outro * 0.7 $duration-outro * 0.3 cubic-bezier(0.5, 0.22, 0.6, 1);
+
+        &::after {
+            background-position: 0 0;
+        }
+    }
+
+    @keyframes refresher__upper-arm--outro-b-part-1 {
+        0% { transform: rotate(13deg); }
+        100% { transform: rotate(11deg); }
+    }
+    @keyframes refresher__upper-arm--outro-b {
+        0% { transform: rotate(11deg); }
+        100% { transform: rotate(90deg); }
+    }
+    @keyframes refresher__middle-arm--outro-b-part-1 {
+        0% { transform: rotate(-123deg); }
+        100% { transform: rotate(-131deg); }
+    }
+    @keyframes refresher__middle-arm--outro-b {
+        0% { transform: rotate(-131deg); }
+        100% { transform: rotate(90deg); }
+    }
+    @keyframes refresher__lower-arm--outro-b-part-1 {
+        0% { transform: rotate(53.1deg); }
+        100% { transform: rotate(57.4deg); }
+    }
+    @keyframes refresher__lower-arm--outro-b {
+        0% { transform: rotate(57.4deg); }
+        100% { transform: rotate(90deg); }
+    }
+    @keyframes refresher__hand--outro-b-part-1 {
+        0% { transform: rotate(-33.1deg); }
+        100% { transform: rotate(78deg); }
+    }
+    @keyframes refresher__hand--outro-b-part-2 {
+        0% { transform: rotate(78deg); }
+        100% { transform: rotate(63.6deg); }
+    }
+    @keyframes refresher__hand--outro-b {
+        0% { transform: rotate(63.6deg); }
+        100% { transform: rotate(-140deg); }
+    }
+    &--animate-outro-b &__upper-arm {
+        animation:
+            refresher__upper-arm--outro-b-part-1 $duration-outro * 0.4 0s                    ease-in-out,
+            refresher__upper-arm--outro-b        $duration-outro * 0.4 $duration-outro * 0.6 cubic-bezier(0.4, 0, 0.7, 0.11);
+    }
+    &--animate-outro-b &__middle-arm {
+        animation:
+            refresher__middle-arm--outro-b-part-1 $duration-outro * 0.33 0s                     cubic-bezier(0.27, 0, 0.4, 1),
+            refresher__middle-arm--outro-b        $duration-outro * 0.67 $duration-outro * 0.33 cubic-bezier(0.8, 0, 0.8, 1);
+    }
+    &--animate-outro-b &__lower-arm {
+        animation:
+            refresher__lower-arm--outro-b-part-1 $duration-outro * 0.4 0s                    cubic-bezier(0.61, 0, 0.24, 1),
+            refresher__lower-arm--outro-b        $duration-outro * 0.5 $duration-outro * 0.4 cubic-bezier(0.4, 0, 0.4, 1);
+    }
+    &--animate-outro-b &__hand {
+        animation:
+            refresher__hand--outro-b-part-1 $duration-outro * 0.18 0s                     cubic-bezier(0.5, 0, 0.6, 1),
+            refresher__hand--outro-b-part-2 $duration-outro * 0.22 $duration-outro * 0.18 cubic-bezier(0.1, 0, 0.2, 0.7),
+            refresher__hand--outro-b        $duration-outro * 0.7  $duration-outro * 0.4  cubic-bezier(0.4, 0.04, 0.6, 1);
+
+        &::after {
+            background-position: 0 0;
+        }
     }
 }
