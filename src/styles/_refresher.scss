@@ -2,7 +2,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: -1.41rem -1.15rem 0 0.41rem;
+    margin: -1.41rem calc(-0.71rem + 1rem) 0 0.41rem;
     width: 2.82rem;
     height: 2.82rem;
     cursor: pointer;
@@ -13,7 +13,7 @@
         width: 2rem;
         height: 2rem;
         background: #fff;
-        transform: rotate(45deg);
+        transform: scaleY(2) rotate(45deg);
     }
 
     &__dot {
@@ -27,10 +27,20 @@
         transition: ease all 0.2s;
     }
 
-    $border-width: 2px;
-    $bar-thickness: 6px;
-    $spur-length: 10px;
-    $pin-diameter: 4px;
+    $width: 166px;
+    $height: 252px;
+
+    $border-width: 2px * 1.5;
+    $bar-thickness: 6px * 1.5;
+    $spur-length: 10px * 1.5;
+    $pin-diameter: 4px * 1.5;
+
+    &__prodder {
+        width: 0;
+        height: 0;
+        position: absolute;
+        top: 25%;
+    }
 
     &__upper-arm,
     &__middle-arm,
@@ -43,42 +53,44 @@
         border: $border-width solid #000;
         border-radius: 1000px;
         transform-origin: calc(100% - (($bar-thickness / 2) + $border-width + $spur-length)) center;
-    }
-
-    &__upper-arm {
-        top: -12.2rem;
-        right: calc(1.15rem - 3rem - 4rem - 1rem - (($bar-thickness / 2) + $border-width + $spur-length));
-        pointer-events: none;
-    }
-
-    &__upper-arm {
-        width: 120px + $bar-thickness + $spur-length;
-    }
-    &__middle-arm {
-        width: 100px + $bar-thickness + $spur-length;
-    }
-    &__lower-arm {
-        width: 80px + $bar-thickness + $spur-length;
-    }
-    &__middle-arm,
-    &__lower-arm,
-    &__hand {
-        top: -2px;
-        right: calc(100% - ($bar-thickness + $border-width + $spur-length));
 
         &::before {
             content: '';
             position: absolute;
-            top: ($bar-thickness / 2) - ($pin-diameter / 2);
-            right: ($bar-thickness / 2) - ($pin-diameter / 2) + $spur-length;
+            top: calc(($bar-thickness / 2) - ($pin-diameter / 2));
+            right: calc(($bar-thickness / 2) - ($pin-diameter / 2) + $spur-length);
             width: $pin-diameter;
             height: $pin-diameter;
             border-radius: 1000px;
             background: #000;
         }
     }
+
+    &__upper-arm {
+        top: -12.2rem;
+        right: calc(1.15rem - 3rem - 4rem - 1rem - (($bar-thickness / 2) + $border-width + $spur-length));
+        top: calc(($bar-thickness / -2) - $border-width - $height);
+        right: calc(($bar-thickness / -2) - $border-width - $spur-length - $width);
+        pointer-events: none;
+    }
+
+    &__upper-arm {
+        width: 150px + $bar-thickness + $spur-length;
+    }
+    &__middle-arm {
+        width: 125px + $bar-thickness + $spur-length;
+    }
+    &__lower-arm {
+        width: 100px + $bar-thickness + $spur-length;
+    }
+    &__middle-arm,
+    &__lower-arm,
     &__hand {
-        width: 30px + $bar-thickness / 2 + $spur-length;
+        top: -$border-width;
+        right: calc(100% - ($bar-thickness + $border-width + $spur-length));
+    }
+    &__hand {
+        width: calc(36px + $bar-thickness / 2 + $spur-length);
         border-top-left-radius: 0;
         border-bottom-left-radius: 0;
 
@@ -98,10 +110,10 @@
         &::after {
             content: '';
             position: absolute;
-            top: ($bar-thickness / 2) - (32px / 2) - 2.5px;
-            left: -36px;
-            width: 36px;
-            height: 32px;
+            top: calc(($bar-thickness / 2) - ((32px * 1.5) / 2) - (2.5px * 1.5));
+            left: -36px * 1.5;
+            width: 36px * 1.5;
+            height: 32px * 1.5;
             background: url('/static/images/prod.svg');
             background-size: 100%;
             background-position: 0 100%;
@@ -149,7 +161,7 @@
     }
     &--animate-intro &__hand {
         animation:
-            refresher__hand--intro-part-1 $duration-intro * 0.258 $duration-intro * 0.276 cubic-bezier(0.2, 0, 0.4, 1) both,
+            refresher__hand--intro-part-1 $duration-intro * 0.258 $duration-intro * 0.276 cubic-bezier(0.2, 0, 0.4, 1)         both,
             refresher__hand--intro-part-2 $duration-intro * 0.250 $duration-intro * 0.546 cubic-bezier(0.178, 0, 0.692, 0.791) forwards,
             refresher__hand--intro        $duration-intro * 0.204 $duration-intro * 0.796 cubic-bezier(0.333, 2.444, 0.543, 1) forwards;
     }
@@ -172,13 +184,13 @@
     }
 
     &--animate-idle &__upper-arm {
-        animation: refresher__upper-arm--idle  $duration-idle cubic-bezier(0.7,0,0.65,1) infinite alternate;
+        animation: refresher__upper-arm--idle  $duration-idle cubic-bezier(0.7,0,0.65,1)    infinite alternate;
     }
     &--animate-idle &__middle-arm {
         animation: refresher__middle-arm--idle $duration-idle cubic-bezier(0.712,0,0.662,1) infinite alternate;
     }
     &--animate-idle &__lower-arm {
-        animation: refresher__lower-arm--idle  $duration-idle cubic-bezier(0.69,0,0.66,1) infinite alternate;
+        animation: refresher__lower-arm--idle  $duration-idle cubic-bezier(0.69,0,0.66,1)   infinite alternate;
     }
     &--animate-idle &__hand {
         animation: refresher__hand--idle       $duration-idle cubic-bezier(0.682,0,0.661,1) infinite alternate;
@@ -234,8 +246,8 @@
     }
     &--animate-outro-a &__hand {
         animation:
-        refresher__hand--outro-a-part-1 $duration-outro * 0.3 0s                    cubic-bezier(0.28, 0, 0.4, 1.2),
-        refresher__hand--outro-a        $duration-outro * 0.7 $duration-outro * 0.3 cubic-bezier(0.5, 0.22, 0.6, 1);
+            refresher__hand--outro-a-part-1 $duration-outro * 0.3 0s                    cubic-bezier(0.28, 0, 0.4, 1.2),
+            refresher__hand--outro-a        $duration-outro * 0.7 $duration-outro * 0.3 cubic-bezier(0.5, 0.22, 0.6, 1);
 
         &::after {
             background-position: 0 0;
@@ -302,5 +314,16 @@
         &::after {
             background-position: 0 0;
         }
+    }
+
+    &--animate-outro-a &__upper-arm,
+    &--animate-outro-a &__middle-arm,
+    &--animate-outro-a &__lower-arm,
+    &--animate-outro-a &__hand,
+    &--animate-outro-b &__upper-arm,
+    &--animate-outro-b &__middle-arm,
+    &--animate-outro-b &__lower-arm,
+    &--animate-outro-b &__hand {
+        animation-fill-mode: forwards;
     }
 }
