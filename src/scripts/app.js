@@ -55,17 +55,16 @@ const tiles = [
 
 const generateDistribution = function generateDistribution() {
     /* I want the highest proportion of the tiles drawn to be blank. This line
-     * ensures that 49%-81% of the tiles will be blank, with a slight bias
-     * towards the lower end.
+     * ensures that 60%-90% of the tiles will be blank.
      */
-    const spacePortion = (0.7 + Math.random() * 0.2) ** 2;
+    const spacePortion = 0.6 + Math.random() * 0.3;
     const pickPortion = 1 - spacePortion;
 
-    /* This block picks 2+ tile patterns from the `tiles' array, and generates
+    /* This block picks 2-5 tile patterns from the `tiles' array, and generates
      * random points to give the picked tiles different probabilities of being
      * used.
      */
-    const pickCount = 2 + Math.floor(Math.random() * (tiles.length - 2))
+    const pickCount = Math.floor(tiles.length * (0.25 + Math.random() * 0.5));
     const pickPoints = [];
     const picks = [];
     const tilesCopy = tiles.slice();
@@ -97,7 +96,7 @@ const generateScheme = function generateScheme() {
      * light and very dark backgrounds a lot rarely than they'd otherwise be.
      */
     const x = Math.random();
-    const backgroundLightness = (1.1 * (x - 0.5)) ** 3 + 0.1 * x + 0.17;
+    const backgroundLightness = (0.8 * (x - 0.4)) ** 3 + 0.06;
     let lightnessRange;
     let lightnessOffset;
 
@@ -118,8 +117,8 @@ const generateScheme = function generateScheme() {
      * complementary colours.
      */
     const baseHue = Math.random() * 360;
-    const hueRange = 30 + 90 * Math.random();
-    const hueOffsetMax = 90;
+    const hueRange = 80 + 80 * Math.random();
+    const hueOffsetMax = 160;
     const hueOffset =
         -hueOffsetMax + hueOffsetMax * 2 * Math.random() - (hueRange / 2);
 
