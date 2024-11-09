@@ -195,50 +195,99 @@ const hslToHex = function hslToHex(hue, saturation, lightness) {
     return '#' + rgb.map(v => v.toString(16).padStart(2, '0')).join('');
 };
 
+/* Ease range 0-1 following sine curve.
+ */
+const ease = function ease(x) {
+    return (Math.sin(Math.PI * (Math.min(1, Math.max(0, x)) - 0.5)) + 1) / 2;
+};
+
+const pace = 60 / 1000;
+const patternSpecs = [];
+let linePrevious;
+let canvasSpec;
+let lastPatternSpec;
+let requestID;
+
 /* Draw a new random pattern in the canvas, using a provided distribution and
  * colour scheme.
  */
-const draw = function draw(distribution, scheme) {
-    const {width, height} = el.canvas;
+const draw = function draw(full) {
+    requestID = null;
 
-    ctx.fillStyle = scheme.background;
-    ctx.fillRect(0, 0, width, height);
+    const time = Date.now();
+    const cycleDuration = (canvasSpec.lines + 1) / pace;
+    let pops = 0;
 
-    ctx.fillStyle = '#fff';
-    for (let y = 0; y < height; y += 24) {
-        for (let x = 0; x < width; x += 12) {
-            const cellEntropy = Math.random();
-            let tile;
-            distribution.pickPoints.some((pickPoint, i) => {
-                if (cellEntropy < pickPoint) {
-                    tile = distribution.picks[i];
-                    return true;
-                }
-            });
+    if (full && lastPatternSpec) {
+        lastPatternSpec.line = canvasSpec.lines - 1;
+        patternSpecs.push(lastPatternSpec);
+    }
 
-            if (tile) {
-                const colourIndex = Math.floor(
-                    distribution.pickCount * (cellEntropy * 10000 % 1));
-                ctx.fillStyle = scheme[colourIndex];
-                for (let py = 0; py < 13; py++) {
-                    for (let px = 0; px < 13; px++) {
-                        if (tile[py][px]) {
-                            ctx.fillRect(x + px, y + (py * 2), 1, 2);
+    patternSpecs.forEach((patternSpec, i) => {
+        const patternSpecPrevious = patternSpecs[i - 1];
+
+        const timeElapsedPattern =
+            ease((time - patternSpec.startedAt) / cycleDuration) *
+            cycleDuration;
+        patternSpec.linePrevious = patternSpec.line || canvasSpec.lines;
+        patternSpec.line =
+            canvasSpec.lines - Math.floor(timeElapsedPattern * pace);
+
+        const lineStart = Math.min(
+            full ? canvasSpec.lines - 1 : patternSpec.linePrevious - 1,
+            (patternSpecPrevious?.line || canvasSpec.lines) - 1,
+        );
+
+        for (let l = lineStart; l >= patternSpec.line; l--) {
+            if (canvasSpec.lineCells[l]) {
+                for (let i = 0; i < canvasSpec.lineCells[l]; i++) {
+                    const x = 12 * (canvasSpec.lineOffset[l] + i);
+                    const y = 24 * (l - canvasSpec.lineOffset[l] - i);
+
+                    ctx.fillStyle = patternSpec.scheme.background;
+                    ctx.fillRect(x, y, 12, 24);
+
+                    const cellEntropy = Math.random();
+                    let tile;
+                    patternSpec.distribution.pickPoints.some((pickPoint, i) => {
+                        if (cellEntropy < pickPoint) {
+                            tile = patternSpec.distribution.picks[i];
+                            return true;
+                        }
+                    });
+
+                    if (tile) {
+                        const colourIndex = Math.floor(
+                            patternSpec.distribution.pickCount *
+                            (cellEntropy * 10000 % 1)
+                        );
+                        ctx.fillStyle = patternSpec.scheme[colourIndex];
+                        for (let py = 0; py < 13; py++) {
+                            for (let px = 0; px < 13; px++) {
+                                if (tile[py][px]) {
+                                    ctx.fillRect(x + px, y + (py * 2), 1, 2);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
-    }
-};
 
-/* Adjust the size of the canvas to the size of the screen, and call the
- * generator function to refresh the pattern.
- */
-const resize = function resize() {
-    el.canvas.width = el.canvasFrame.clientWidth * adjustmentRatio;
-    el.canvas.height = el.canvasFrame.clientHeight * adjustmentRatio;
-    updatePattern();
+        if (patternSpec.line <= 0) {
+            pops++;
+        }
+    });
+
+    for (let i = 0; i < pops; i++) {
+        lastPatternSpec = patternSpecs.pop();
+    }
+
+    if (patternSpecs.length > 0) {
+        requestID = requestAnimationFrame(() => {
+            draw();
+        });
+    }
 };
 
 let refresherIsAcknowledged = false;
@@ -249,25 +298,70 @@ let idleAnimationCount = -1;
  * are not requested, the last one used will be re-used. A closure is used to
  * store the two arrays privately.
  */
-const updatePattern = (() => {
-    let distribution;
-    let scheme;
-    let schemeHex;
+const addNewPattern = function addNewPattern() {
+    const distribution = generateDistribution();
+    const scheme = generateScheme();
+    const schemeHex = scheme.map(c => hslToHex(...c));
+    addBackgroundGetter(schemeHex);
 
-    return (newEntropy) => {
-        if (newEntropy || !distribution) {
-            distribution = generateDistribution();
-            scheme = generateScheme();
-            schemeHex = scheme.map(c => hslToHex(...c));
-            addBackgroundGetter(schemeHex);
-        }
-        draw(distribution, schemeHex);
+    patternSpecs.unshift({
+        distribution,
+        scheme: schemeHex,
+        startedAt: Date.now(),
+    });
 
-        //el.nameHeading.style.setProperty('--shadow-color', scheme[0]);
-        el.refresherDot.style.background = schemeHex.background;
-        el.metaThemeColor.content = hslToHex(scheme.background[0], 0.3, 0.7);
+    if (!requestID) {
+        draw();
+    }
+
+    setTimeout(
+        () => {
+            el.refresherDot.style.setProperty('--color', schemeHex.background);
+        },
+        el.refresherDot.style.getPropertyValue('--color') ? 600 * 0.41 : 0,
+    );
+    el.metaThemeColor.content = hslToHex(scheme.background[0], 0.3, 0.7);
+};
+
+/* Adjust the size of the canvas to the size of the screen, and call the
+ * generator function to refresh the pattern.
+ */
+const resize = function resize() {
+    const scale = window.innerWidth > 1000 ? 2 : 1;
+
+    const width =
+        Math.ceil(el.canvasFrame.clientWidth * adjustmentRatio / scale);
+    const height =
+        Math.ceil(el.canvasFrame.clientHeight * adjustmentRatio / scale);
+    const widthCells = Math.ceil(width / 12);
+    const heightCells = Math.ceil(height / 24);
+
+    el.canvas.width = width;
+    el.canvas.height = height;
+    el.canvas.style.width = `${width * scale / adjustmentRatio}px`;
+    el.canvas.style.height = `${height * scale / adjustmentRatio}px`;
+
+    canvasSpec = {
+        width,
+        height,
+        widthCells,
+        heightCells,
+        lines: widthCells + heightCells - 1,
+        lineCells: [...Array(widthCells + heightCells - 1)].map((_, i) => {
+            return Math.min(
+                i + 1,
+                widthCells,
+                heightCells,
+                widthCells + heightCells - i - 1,
+            );
+        }),
+        lineOffset: [...Array(widthCells + heightCells - 1)].map((_, i) => {
+            return Math.max(0, i - heightCells + 1);
+        }),
     };
-})();
+
+    draw(true);
+};
 
 /* BOOTSTRAPPY STUFF */
 
@@ -275,7 +369,6 @@ const el = {};
 el.metaThemeColor = document.querySelector('.meta__theme-color');
 el.canvasFrame = document.querySelector('.layout__canvas-frame');
 el.canvas = document.querySelector('.layout__canvas');
-//el.nameHeading = document.querySelector('.content__name');
 el.refresher = document.querySelector('.refresher');
 el.refresherDot = document.querySelector('.refresher__dot');
 
@@ -287,50 +380,64 @@ const ctx = el.canvas.getContext('2d');
 const adjustmentRatio =
     window.devicePixelRatio / Math.round(window.devicePixelRatio);
 
-window.addEventListener('resize', resize);
-resize(); // Will also call `updatePattern()'.
-el.refresher.addEventListener('click', (() => {
-    let dotRotation = 0;
+const refresh = (() => {
+    let dotScale = 1;
 
     return () => {
-        if (idleAnimationCount >= 0) refresherIsAcknowledged = true;
+        refresherIsAcknowledged = true;
 
-        updatePattern(true);
-        dotRotation += 90;
-        el.refresherDot.style.transform = `rotate(${dotRotation}deg)`;
+        addNewPattern();
+        dotScale *= -1;
+        el.refresherDot.style.transform = `scaleY(${dotScale})`;
     }
-})());
+})();
+window.addEventListener('resize', resize);
+el.refresher.addEventListener('mousedown', refresh);
+window.addEventListener('keypress', (event) => {
+    if (event.key.toLowerCase() === 'r') {
+        (event.shiftKey ? resize : refresh)();
+    }
+});
 
-const joints = Array.from(document.querySelectorAll('.refresher__upper-arm, .refresher__middle-arm, .refresher__lower-arm, .refresher__hand'));
-const button = document.querySelector('button');
-const input = document.querySelector('input');
+resize();
+setTimeout(() => {
+    addNewPattern();
+}, 200);
+
+const joints = Array.from(document.querySelectorAll([
+    '.refresher__upper-arm',
+    '.refresher__middle-arm',
+    '.refresher__lower-arm',
+    '.refresher__hand',
+].join()));
 
 const endIdleAnimation = function endIdleAnimation(event) {
-    console.log('animationiteration')
     if (event.target == joints[0] && !event.animationName.includes('-part-')) {
         idleAnimationCount++;
 
         if (refresherIsAcknowledged) {
             joints[0].parentElement.classList.remove('refresher--animate-idle');
             const outroID = idleAnimationCount % 2 == 0 ? 'a' : 'b';
-            joints[0].parentElement.classList.add(`refresher--animate-outro-${outroID}`);
+            joints[0].parentElement.classList
+                .add(`refresher--animate-outro-${outroID}`);
         }
     }
 };
 
 const endIntroAnimation = function endIntroAnimation(event) {
-    console.log('animationend')
     if (event.target == joints[0] && !event.animationName.includes('-part-')) {
-        console.log('animationend upper-arm')
         joints[0].parentElement.classList.remove('refresher--animate-intro');
         joints[0].parentElement.classList.add('refresher--animate-idle');
 
         joints[0].removeEventListener('animationend', endIntroAnimation);
         joints[0].addEventListener('animationiteration', endIdleAnimation);
         idleAnimationCount = 0;
-        console.log('animationend2');
     }
 }
 
-joints[0].parentElement.classList.add('refresher--animate-intro');
-joints[0].addEventListener('animationend', endIntroAnimation);
+setTimeout(() => {
+    if (!refresherIsAcknowledged) {
+        joints[0].parentElement.classList.add('refresher--animate-intro');
+        joints[0].addEventListener('animationend', endIntroAnimation);
+    }
+}, 5000);
