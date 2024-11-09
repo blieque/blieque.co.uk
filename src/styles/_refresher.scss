@@ -2,29 +2,49 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: -1.41rem calc(-0.71rem + 1rem) 0 0.41rem;
+    margin: -2.82rem calc(-0.71rem + 3rem) 0 calc(-0.71rem + 2rem);
     width: 2.82rem;
-    height: 2.82rem;
+    height: 5.64rem;
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
 
+    &__frame,
+    &__dot {
+        width: 100%;
+        height: 100%;
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            transform: scaleY(2) rotate(45deg);
+        }
+    }
+
     &__frame {
-        width: 2rem;
-        height: 2rem;
-        background: #fff;
-        transform: scaleY(2) rotate(45deg);
+        &::before {
+            top: calc(50% - 1rem);
+            left: calc(50% - 1rem);
+            width: 2rem;
+            height: 2rem;
+            background: #fff;
+        }
     }
 
     &__dot {
-        display: block;
-        position: absolute;
-        top: 0.51rem;
-        left: 0.51rem;
-        width: 1rem;
-        height: 1rem;
-        background: #222;
-        transition: ease all 0.2s;
+        transition: cubic-bezier(0.6, 0, 0.15, 1) all 0.6s;
+
+        &::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: calc(50% - 0.5rem);
+            left: calc(50% - 0.5rem);
+            width: 1rem;
+            height: 1rem;
+            background: var(--color);
+        }
     }
 
     $width: 166px;
@@ -39,7 +59,7 @@
         width: 0;
         height: 0;
         position: absolute;
-        top: 25%;
+        top: 35%;
     }
 
     &__upper-arm,
@@ -67,11 +87,10 @@
     }
 
     &__upper-arm {
-        top: -12.2rem;
-        right: calc(1.15rem - 3rem - 4rem - 1rem - (($bar-thickness / 2) + $border-width + $spur-length));
         top: calc(($bar-thickness / -2) - $border-width - $height);
-        right: calc(($bar-thickness / -2) - $border-width - $spur-length - $width);
+        right: calc(($bar-thickness / -2) - $border-width - $spur-length - $width - 0.7px);
         pointer-events: none;
+        transform: rotate(90deg);
     }
 
     &__upper-arm {
@@ -121,9 +140,9 @@
         }
     }
 
-    $duration-intro: 3s;
-    $duration-idle: 0.5s;
-    $duration-outro: 3s;
+    $duration-intro: 2.2s;
+    $duration-idle: 0.36s;
+    $duration-outro: 2.5s;
 
     @keyframes refresher__upper-arm--intro {
         0% { transform: rotate(90deg); }

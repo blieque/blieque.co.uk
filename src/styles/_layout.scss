@@ -2,12 +2,12 @@
 html,
 body {
     height: 100%;
+    overflow: hidden;
 }
 
 body {
     margin: 0;
     font-family: 'overpass mono', sans-serif;
-    overflow: hidden;
 }
 
 * {
@@ -30,7 +30,6 @@ body {
     &__canvas-frame {
         overflow: hidden;
         height: 100%;
-        background: black;
     }
     &__canvas {
         position: absolute;
@@ -41,7 +40,7 @@ body {
 
     &__content {
         min-height: 4rem;
-        padding: 0 7rem 3rem;
+        padding: 0 4rem 3rem 7rem;
 
         > :last-child {
             margin-bottom: 0;

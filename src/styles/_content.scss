@@ -10,7 +10,6 @@
         }
         .content__col:nth-child(2) {
             flex-grow: 1;
-            padding-right: 1rem;
         }
     }
 
@@ -29,9 +28,9 @@
          */
         &-plate {
             display: inline-block;
-            padding: 0.83rem 1.3rem 0 0.6rem;
+            padding: 0.83rem 1.3rem 0 0.65rem;
             background: #fff;
-            text-indent: 0.5rem;
+            text-indent: 0.3rem;
         }
     }
 
@@ -44,7 +43,7 @@
     }
 
     &__description {
-        margin: 1.74rem 0 0;
+        margin: 1.74rem 0 0 -0.1rem;
         font-family: 'cmu serif', serif;
         font-style: italic;
         font-size: 150%;
@@ -60,10 +59,14 @@
         }
 
         span {
-            top: -0.05em;
-            font-family: 'overpass mono', sans-serif;
-            font-style: normal;
-            font-size: 0.75em;
+            margin-left: -0.12rem;
         }
+    }
+
+    &__bullet {
+        top: -0.05em;
+        font-family: 'overpass mono', sans-serif;
+        font-style: normal;
+        font-size: 0.75em;
     }
 }

@@ -1,13 +1,21 @@
 @media (max-width: 62rem) {
+    .layout__content > .content__col:nth-child(2) {
+        width: 0;
+    }
+
     .content--text {
         flex-direction: column;
 
         .content__description {
             margin-top: 1.4rem;
         }
-        .content__col:nth-child(2) {
-            margin-right: -2rem;
+        .content__col:nth-child(1) {
+            padding-right: 0;
         }
+    }
+
+    .refresher {
+        margin-left: calc(-0.71rem * 3 - 3rem);
     }
 }
 
@@ -18,8 +26,12 @@
             padding: 2rem 2rem 0;
         }
         &__content {
-            padding: 0 5rem 3rem;
+            padding: 0 2rem 3rem 5rem;
         }
+    }
+
+    .refresher__prodder {
+        transform: scale(0.667);
     }
 }
 
@@ -28,12 +40,10 @@
         &__name-plate {
             display: table-caption;
         }
-        &__description {
-            span {
-                display: block;
-                height: 0.4rem;
-                visibility: hidden;
-            }
+        &__bullet {
+            display: block;
+            height: 0.4rem;
+            visibility: hidden;
         }
     }
 
